@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Researcher: Evaluate RA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="../static/faviconraf.png" rel="icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 200px;
+        }
+
+        .back-button {
+            margin-left: auto;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+        
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .form-container {
+            width: 350px;
+            padding: 30px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="submit"] {
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="../static/logo.png" alt="RAF Logo">
+            <h1>Evaluate Research Assistant Performance</h1>
+        </div>
+        <a class="back-button" href="/indexR" style="color: black;">Back to Main Page</a>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Select Title Grant:</h2>
+            <form action="/ra_evaluateR" method="POST" name="project_form">
+                <label for="project_id">Title Grant:</label>
+                <select name="project_id" id="project_id" required>
+                    <option value="">Select Title Grant</option>
+                    {% for project_id in project_ids %}
+                        <option value="{{ project_id }}">{{ project_id }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        {% if project %}
+            <div class="form-container">
+                <form action="/rating_evaluate" method="POST">
+                    <input type="hidden" name="project_id" value="{{ project.project_id }}">
+                    <input type="hidden" name="user_id" value="{{ project.user_id }}">
+                    <h2>Choose from 1 to 5</h2>
+                    <input type="number" name="rating" min="1" max="5" required>
+                    <h2>Give Comment:</h2>
+                    <input type="text" name="comment">
+                    <h2>Select Date:</h2>
+                    <input type="date" name="date">
+                    <input type="submit" value="Submit Rating">
+                </form>
+            </div>
+
+            <div class="form-container">
+                <form action="/skill_evaluate" method="POST">
+                    <input type="hidden" name="project_id" value="{{ project.project_id }}">
+                    <input type="hidden" name="user_id" value="{{ project.user_id }}">
+                    <h1>Communication</h1>
+                    <h2>How effectively did the research assistant communicate ideas, progress, and findings throughout the project?</h2>
+                    <input type="number" name="communication1">
+                    <h2>How well did the research assistant listen and understand instructions, feedback, and requirements?</h2>
+                    <input type="number" name="communication2">
+                    <h2>Did the research assistant demonstrate clear and concise writing skills in reports, presentations, or other forms of communication?</h2>
+                    <input type="number" name="communication3">
+                    <h1>Research Methodology</h1>
+                    <h2>To what extent did the research assistant demonstrate critical thinking and problem-solving skills in designing and executing research tasks?</h2>
+                    <input type="number" name="research_methodology1">
+                    <h2>Did the research assistant show proficiency in conducting literature reviews and gathering relevant research materials?</h2>
+                    <input type="number" name="research_methodology2">
+                    <h2>How well did the research assistant demonstrate knowledge and understanding of research methodologies relevant to the project?</h2>
+                    <input type="number" name="research_methodology3">
+                    <h1>Subject Matter</h1>
+                    <h2>Did the research assistant demonstrate the willingness to learn and adapt to new subject matter or concepts required for the project?</h2>
+                    <input type="number" name="subject_matter1">
+                    <h2>Did the research assistant show the ability to apply relevant theories, concepts, or methods to the research tasks?</h2>
+                    <input type="number" name="subject_matter2">
+                    <h2>How well did the research assistant display knowledge and understanding of the specific subject matter or field related to the project?</h2>
+                    <input type="number" name="subject_matter3">
+                    <h1>Collaboration</h1>
+                    <h2>To what extent did the research assistant contribute ideas, insights, or solutions during team discussions or brainstorming sessions?</h2>
+                    <input type="number" name="collaboration1">
+                    <h2>Did the research assistant demonstrate good interpersonal skills and the ability to work well with others?</h2>
+                    <input type="number" name="collaboration2">
+                    <h2>How effectively did the research assistant contribute to collaborative efforts within the research team?</h2>
+                    <input type="number" name="collaboration3">
+                    <h1>Time Management</h1>
+                    <h2>Were there any instances where the research assistant needed reminders or assistance to stay on track with their assigned tasks and timelines?</h2>
+                    <input type="number" name="time_management1">
+                    <h2>Did the research assistant prioritize tasks effectively and demonstrate the ability to work efficiently?</h2>
+                    <input type="number" name="time_management2">
+                    <h2>How well did the research assistant manage their time and meet project deadlines?</h2>
+                    <input type="number" name="time_management3">
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

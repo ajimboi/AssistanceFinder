@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>RAF: Approval</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link href="../static/faviconraf.png" rel="icon">
+  <style>
+    /* Add your custom CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .requests {
+      margin-top: 30px;
+    }
+
+    .request-card {
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .request-card .details {
+      display: flex;
+      align-items: center;
+    }
+
+    .request-card .details i {
+      font-size: 24px;
+      margin-right: 10px;
+      color: #777;
+    }
+
+    .request-card .details p {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .request-card .actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .request-card .actions .accept,
+    .request-card .actions .reject {
+      color: #fff;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 10px;
+    }
+
+    .request-card .actions .reject {
+      background-color: #FF5252;
+    }
+
+    .request-card .actions .accept:hover,
+    .request-card .actions .reject:hover {
+      background-color: #45a049;
+    }
+
+    .request-card .actions .accept:focus,
+    .request-card .actions .reject:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .footer-sections {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    
+    .footer-section {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .footer-section h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .footer-section p,
+    .footer-section ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .footer-section ul li {
+      margin-bottom: 5px;
+    }
+    
+    .social-icons {
+      margin-bottom: 20px;
+    }
+    
+    .social-icons a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    /* Added CSS for positioning the sections */
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      color: #777;
+    }
+    
+    .footer-sections {
+      align-items: flex-start;
+    }
+
+    .footer-section:nth-child(2) {
+      text-align: right;
+    }
+
+    /* Added CSS for grey color */
+    .footer-content p {
+      color: #777;
+    }
+    
+    /* Added CSS for logout button */
+    .logout-button {
+      color: #fff;
+      background-color: #333;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .logout-button:hover {
+      background-color: #555;
+    }
+  
+    .logout-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="../static/logo.png" alt="RAF Logo">
+    </div>
+    <a class="back-button" href="/indexR" style="color: black;">Back to Main Page</a>
+  </header>
+  <main>
+    <h1>Approval Requests</h1>
+<div class="requests">
+  {% for request in approval_requests %}
+  <div class="request-card">
+    <div class="details">
+      <i class="fas fa-user"></i>
+      <p>{{ request.research_assistant_name }}</p>
+    </div>
+    <div class="details">
+      <i class="fas fa-file"></i>
+      <p>{{ request.title_grant }}</p> <!-- Updated line -->
+    </div>
+    <div class="details">
+      {{ request.user_id_review }}
+      <a href="/performanceRAReview?user_id={{ request.user_id_review }}"><i class="fas fa-chart-line"></i></a>
+    </div>
+    <div class="actions">
+      <form action="/approvalRForm" method="POST">
+        <input type="hidden" name="request_id" value="{{ request.request_id }}">
+        <input type="hidden" name="user_id" value="{{ request.user_id_review }}">
+        <button class="accept" name="action" value="accept">Accept</button>
+        <button class="reject" name="action" value="reject">Reject</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+  </main>
+
+  <footer>
+    <div class="footer-sections">
+      <div class="footer-section">
+        <h2>ABOUT RAF</h2>
+        <div class="footer-content">
+          <p>We offer a matching system and other tools that help researchers identify assistants with the required skills and expertise for their research projects.
+            Join our platform today and experience the seamless integration of expertise, efficiency, and excellence in data visualization research collaborations.
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h2>WHO TO CONTACT</h2>
+        <div class="footer-content">
+          <p>Address: UiTM Cawangan Perak, Kampus Tapah</p>
+          <p>Email: aimanhisham640@gmail.com</a></p>
+          <p>Phone: +6011 2655 4254</a></p>
+        </div>
+      </div>
+    </div>
+    
+    
+    <p>&copy; 2023 RAF. All rights reserved.</p>
+  </footer>
+</body>
+</html>

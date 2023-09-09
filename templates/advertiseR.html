@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Researcher: Advertise Projects</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link href="../static/faviconraf.png" rel="icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #333;
+            padding: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="../static/logo.png" alt="RAF Logo">
+        <a class="back-button" href="/indexR" style="color: black;">Back to Main Page</a>
+    </div>
+    <h1>Advertise Your Project</h1>
+    <form action="/save_project" method="POST">
+        <label for="title_grant">Grant Title:</label>
+        <input type="text" name="title_grant" required><br>
+        <label for="research_domain">Research Domain:</label>
+        <input type="text" name="research_domain" required><br> 
+        <label for="duration_grant">Duration of Grant:</label>
+        <input type="text" name="duration_grant" required><br>
+        <label for="total_amount">Total Amount:</label>
+        <input type="number" name="total_amount" step="0.01" required><br>
+        <label for="principal_researcher">Principal Researcher:</label>
+        <input type="text" name="principal_researcher" required><br>
+        <label for="period_start">Period of Service Start:</label>
+        <input type="date" name="period_start" required><br>
+        <label for="period_end">Period of Service End:</label>
+        <input type="date" name="period_end" required><br>
+        <label for="monthly_allowance">Monthly Allowance:</label>
+        <input type="number" name="monthly_allowance" step="0.01" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

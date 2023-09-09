@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RA: Performance Chart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="../static/faviconraf.png" rel="icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header img {
+            height: 40px;
+            width: auto;
+            margin-right: 20px;
+        }
+
+        .back-button {
+            margin-left: auto;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        select,
+        input[type="submit"],
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        #barChartContainer,
+        #radarChartContainer {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        #commentsList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        #commentsList li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="header">
+        <img src="../static/logo.png" alt="RAF Logo">
+        <h1>Performance Chart</h1>
+        <a class="back-button" href="/indexRA" style="color: black;">Back To Home Page</a>
+    </div>
+
+    <div class="container">
+        <h2>Select Title Grant:</h2>
+        
+        <form action="/performanceRAReview" method="GET" name="project_form">
+            <label for="title_grant">Title Grant:</label>
+            <select name="title_grant" id="title_grant" required>
+                <option value="">Select a title grant</option>
+                {% for title_grant in title_grants %}
+                    <option value="{{ title_grant }}">{{ title_grant }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="user_id" value="{{ user_id_review }}">
+            <input type="submit" value="Submit">
+        </form>
+        {% if project %}
+            <h2>Project Details:</h2>
+            <p>Title Grant: {{ project[0] }}</p>
+            <p>Name: {{ project[1] }}</p>
+
+            <h1>Performance Chart</h1>
+            <div id="barChartContainer">
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <div id="radarChartContainer">
+                <canvas id="radarChart"></canvas>
+            </div>
+
+            <h2>Comments:</h2>
+            <ul id="commentsList"></ul>
+
+            <script>
+                // Retrieve the chart data from the Flask route
+                var chartData = {{ chart_data | tojson }};
+                var skillData = {{ skill_data | tojson }};
+                var comments = {{ comments | tojson }};
+
+                // Extract the months and ratings
+                var months = chartData.months;
+                var ratings = chartData.ratings;
+
+                // Extract the skill names and average values
+                var skills = Object.keys(skillData);
+                var skillAverages = Object.values(skillData);
+
+                // Create an array to store the formatted month names
+                var formattedMonths = [];
+
+                // Format the month names
+                for (var i = 0; i < months.length; i++) {
+                    var month = new Date(months[i]);
+                    var formattedMonth = month.toLocaleString('en-us', { month: 'long' });
+                    formattedMonths.push(formattedMonth);
+                }
+
+                // Create a bar chart using Chart.js
+                var barCtx = document.getElementById('barChart').getContext('2d');
+                var barChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: formattedMonths, // Use the formatted month names
+                        datasets: [{
+                            label: 'Rating',
+                            data: ratings,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1, // Set the step size between ticks to 1
+                                    precision: 0 // Remove decimal places from the tick labels
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        indexAxis: 'x',
+                        barPercentage: 0.7, // Adjust the width of the bars
+                        categoryPercentage: 0.8 // Adjust the spacing between bars
+                    }
+                });
+
+                // Create a radar chart using Chart.js
+                var radarCtx = document.getElementById('radarChart').getContext('2d');
+                var radarChart = new Chart(radarCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Communication', 'Research Methodology', 'Subject Matter', 'Collaboration', 'Time Management'],
+                        datasets: [{
+                            label: 'Average Skill Level',
+                            data: skillAverages,
+                            backgroundColor: 'rgba(192, 75, 192, 0.2)',
+                            borderColor: 'rgba(192, 75, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5 // Adjust the maximum value on the radar chart
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+
+                // Populate comments
+                const commentsList = document.getElementById('commentsList');
+                for (let i = 0; i < comments.length; i++) {
+                    const commentItem = document.createElement('li');
+                    commentItem.textContent = comments[i];
+                    commentsList.appendChild(commentItem);
+                }
+            </script>
+        {% endif %}
+    </div>
+</body>
+</html>

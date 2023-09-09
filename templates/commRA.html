@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RA: Communication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="../static/faviconraf.png" rel="icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    
+        .header {
+            display: flex;
+            justify-content: space-between; /* Add space between logo and button */
+            align-items: center; /* Center align the content vertically */
+            background-color: #333;
+            padding: 20px;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-logo img {
+            height: 40px;
+            width: auto;
+            margin-right: 350px;
+        }
+        
+        .back-button {
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+        
+        .back-button:hover {
+            background-color: #555;
+        }
+    
+        .container {
+            padding: 20px;
+        }
+    
+        h2 {
+            text-align: center;
+        }
+    
+        form {
+            text-align: center;
+        }
+    
+        select {
+            margin-top: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .action-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        .action-buttons button:hover {
+            background-color: #555;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="header">
+        <div class="header-logo">
+            <img src="../static/logo.png" alt="RAF Logo">
+            <h1 class="header-title">Communication Media</h1>
+        </div>
+        <a class="back-button" href="/indexRA" style="color: black;">Back To Home Page</a>
+    </div>
+
+    <div class="container">
+        <h2>Choose Title Grant</h2>
+        <form action="/commRA" method="POST">
+            <select name="title_grant">
+                <option value="Title 1">Title Grant</option>
+                <option value="Title 2">Title 2</option>
+                <option value="Title 3">Title 3</option>
+                <!-- Add more title grant options if needed -->
+            </select>
+            <br>
+            <input type="submit" value="Choose Title Grant">
+        </form>
+
+        {% if title_grant %}
+            <h2>Selected Title Grant: {{ title_grant }}</h2>
+            <div class="action-buttons">
+                <button onclick="emailResearcher('{{ title_grant }}')">Email Researcher</button>
+                <button onclick="whatsappResearcher('{{ title_grant }}')">WhatsApp Researcher</button>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function emailResearcher(titleGrant) {
+            // Prompt the user to enter the email address
+            var email = prompt("Enter the email address of the researcher:");
+          
+            // Check if the email address is entered
+            if (email) {
+              // Create the email URL
+              var emailURL = "mailto:" + email;
+          
+              // Open the email client
+              window.location.href = emailURL;
+            }
+          }
+          function whatsappResearcher(titleGrant) {
+            // Redirect the user to the WhatsApp page
+            var phoneNumber = prompt("Enter the researcher's phone number (including country code):");
+            var message = "Hello!" + titleGrant;
+          
+            // Check if the phone number is entered
+            if (phoneNumber) {
+              // Create the WhatsApp URL
+              var whatsappURL = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + encodeURIComponent(message);
+          
+              // Redirect the user to the WhatsApp page
+              window.location.href = whatsappURL;
+            }
+          }
+          
+    </script>
+</body>
+</html>

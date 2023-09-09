@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Researcher Communication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="../static/faviconraf.png" rel="icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header img {
+            height: 40px;
+            width: auto;
+            margin-right: 300px; /* Adjust the spacing between the logo and the heading */
+        }
+
+        .back-button {
+            margin-left: auto; /* Push the button to the right side of the header */
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        select,
+        input[type="submit"] {
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .assistant-info {
+            margin-bottom: 20px;
+        }
+
+        .assistant-info p {
+            margin: 0;
+            color: #333;
+        }
+
+        .communication-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .communication-buttons a {
+            margin: 0 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .communication-buttons a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="../static/logo.png" alt="RAF Logo">
+        <h1>Researcher Communication</h1>
+        <a class="back-button" href="/indexR" style="color: black;">Back To Home Page</a>
+    </div>
+
+    <div class="container">
+        <h2>Select Title Grant:</h2>
+        <form action="/researcher_communication" method="POST" name="project_form">
+            <label for="title_grant">Title Grant:</label>
+            <select name="title_grant" id="title_grant" required>
+                <option value="">Select a title grant</option>
+                {% for title_grant in title_grants %}
+                    <option value="{{ title_grant }}">{{ title_grant }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Select">
+        </form>
+    
+        {% if project_id %}
+    <div class="assistant-info">
+        <h2>Research Assistant Information:</h2>
+        <p><strong>Project ID:</strong> {{ project_id[0] }}</p>
+    </div>
+{% endif %}
+
+{% if assistant_info %}
+    <div class="assistant-info">
+        <h2>{{ selected_title_grant }}</h2>
+        <p><strong>Name:</strong> {{ assistant_info[0] }}</p>
+        <p><strong>Email:</strong> {{ assistant_info[1] }}</p>
+        <p><strong>Contact:</strong> {{ assistant_info[2] }}</p>
+    </div>
+    <div class="communication-buttons">
+        <a href="https://wa.me/{{ assistant_info[2] }}" target="_blank">Message through WhatsApp</a>
+        <a href="mailto:{{ assistant_info[1] }}">Message through Email</a>
+    </div>
+{% endif %}
+
+    </div>
+</body>
+</html>
